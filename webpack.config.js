@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const webpack = require('webpack');
 const path = require('path');
 
@@ -67,6 +69,10 @@ module.exports = {
       React: 'react',
       PureComponent: ['react', 'PureComponent'],
       PropTypes: 'prop-types'
+    }),
+    new webpack.DefinePlugin({
+      NODE_API_PORT: JSON.stringify(process.env.NODE_API_PORT),
+      NODE_API_DOMAIN: JSON.stringify(process.env.NODE_API_DOMAIN)
     })
   ],
 
