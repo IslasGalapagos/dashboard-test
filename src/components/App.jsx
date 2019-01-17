@@ -1,22 +1,18 @@
 import {hot} from 'react-hot-loader';
-import {compose} from 'redux';
-import {connect} from 'react-redux';
+import {Global} from '@emotion/core';
+
+import Sources from './Sources/Container';
+import {commonStyles} from './App.styles';
 
 class App extends React.Component {
   render() {
     return (
       <React.StrictMode>
-        <h1>Hello</h1>
+        <Global styles={commonStyles} />
+        <Sources />
       </React.StrictMode>
     );
   }
 }
 
-const mapStateToProps = store => ({
-  store
-});
-
-export default compose(
-  connect(mapStateToProps),
-  hot(module)
-)(App);
+export default hot(module)(App);
