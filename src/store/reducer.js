@@ -1,10 +1,6 @@
-export const initialState = {};
+import {combineReducers} from 'redux';
+import sources from '../components/Sources/reducer';
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    default:
-      return state;
-  }
-};
-
-export default reducer;
+export default combineReducers({
+  sources
+});
