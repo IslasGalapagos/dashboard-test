@@ -12,7 +12,9 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development webpack-dev-server --open --hot --inline",
+    "dev:witch_server": "npm run server | npm run dev",
     "build": "NODE_ENV=production webpack",
+    "server": "node ./server",
     "prettier": "prettier --write ./src/**/*.{js,jsx,json,less,css}",
     "commit": "git cz"
   },
@@ -24,6 +26,7 @@
     "clean-webpack-plugin": "^1.0.0",
     "commitizen": "^3.0.5",
     "css-loader": "^1.0.1",
+    "dotenv": "^6.2.0",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "less-loader": "^4.1.0",
@@ -39,13 +42,16 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.1",
+    "action-helper": "^1.1.0",
     "axios": "^0.18.0",
+    "express": "^4.16.4",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-redux": "^5.1.1",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "superagent": "^4.1.0"
   }
 }
