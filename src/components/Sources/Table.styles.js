@@ -12,18 +12,23 @@ export const loadingStyles = {
 };
 
 export const tableStyles = css`
-  width: 50%;
+  width: 100%;
+  border-collapse: collapse;
+
+  tr {
+    cursor: pointer;
+  }
 
   tr:first-child {
     font-weight: bold;
   }
 
-  tr:not(:first-child) {
-    cursor: pointer;
+  tr:not(:first-child):hover td {
+    color: #777;
   }
 
   tr:not(:first-child) td {
-    padding: 5px 0;
+    padding: 7px 0;
   }
 
   tr:not(:first-child) td:nth-child(2) {
