@@ -20,7 +20,9 @@ module.exports = {
 
   entry: {
     bundle: './src/',
-    normilize: './node_modules/normalize.css/normalize'
+    normilize: './node_modules/normalize.css/normalize',
+    'datepicker-styles':
+      './node_modules/react-datepicker/dist/react-datepicker.css'
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.css']
