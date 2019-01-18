@@ -3,6 +3,7 @@ import {Global} from '@emotion/core';
 
 import Sources from './Sources/Container';
 import {commonStyles} from './App.styles';
+import DatesAndChart from './DatesAndChart/Container';
 
 class App extends React.Component {
   render() {
@@ -10,6 +11,7 @@ class App extends React.Component {
       <React.StrictMode>
         <Global styles={commonStyles} />
         <Sources />
+        <DatesAndChart />
       </React.StrictMode>
     );
   }
