@@ -53,7 +53,7 @@ class Sort extends PureComponent {
 
     return (
       <div css={wrapperStyles}>
-        <h2 css={titleStyles}>Оценить по показателю</h2>
+        <span css={titleStyles}>Оценить по показателю</span>
         <select css={selectStyles} value={value} onChange={this.onChange}>
           {options}
         </select>
