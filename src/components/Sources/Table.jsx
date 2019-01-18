@@ -1,21 +1,36 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
 
-import {titleStyles, loadingStyles, tableStyles} from './Table.styles';
+import {tableStyles} from './Table.styles';
 
 class Table extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.showAbsoluteOffset = this.showAbsoluteOffset.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
   componentDidMount() {
     this.props.getObjects();
   }
 
-  showAbsoluteOffset(event) {
-    // console.log(event.currentTarget.firstChild.textContent);
+  onSelect(event) {
+    let {target} = event;
+
+    while (target.tagName !== 'TABLE') {
+      if (target.tagName === 'TR') {
+        break;
+      }
+
+      target = target.parentElement;
+    }
+
+    const source =
+      target.parentElement.firstChild === target
+        ? null
+        : target.firstChild.textContent;
+
+    this.props.onSelectSource(source);
   }
 
   generateCompaignes(average) {
@@ -24,46 +39,57 @@ class Table extends PureComponent {
       sortingValue
     } = this.props;
 
+    const createEl = data => {
+      const {utm_sourcemedium} = data;
+      const value = +data.analytics[sortingValue].toFixed(2);
+      const offset = +(value - average).toFixed(2);
+
+      let offsetBarWidth = Math.abs(offset) / 10;
+      if (offsetBarWidth < 1) {
+        offsetBarWidth = 1;
+      } else if (offsetBarWidth > 65) {
+        offsetBarWidth = 65;
+      }
+
+      const offsetEl =
+        offset === 0 ? null : (
+          <div
+            className={`offset_bar__wrapper${offset > 0 ? ' -pos' : ' -neg'}`}
+          >
+            <div className="offset_num">{`${offset > 0 ? '+ ' : '- '}${Math.abs(
+              offset
+            )}`}</div>
+            <div
+              className="offset_bar"
+              style={{width: `${offsetBarWidth}px`}}
+            />
+          </div>
+        );
+
+      return (
+        <tr key={utm_sourcemedium}>
+          <td>
+            <span>{utm_sourcemedium}</span>
+          </td>
+          <td>{value}</td>
+          <td>{offsetEl}</td>
+        </tr>
+      );
+    };
+
     return objects
-      .filter(itemData => itemData.analytics[sortingValue] > 0)
+      .sort((x, y) => {
+        if (x.utm_sourcemedium > y.utm_sourcemedium) {
+          return 1;
+        } else if (x.utm_sourcemedium < y.utm_sourcemedium) {
+          return -1;
+        } else {
+          return 0;
+        }
+      })
       .sort((x, y) => y.analytics[sortingValue] - x.analytics[sortingValue])
       .slice(0, 10)
-      .map(itemData => {
-        const {utm_sourcemedium} = itemData;
-        const value = +itemData.analytics[sortingValue].toFixed(2);
-        const offset = +(value - average).toFixed(2);
-
-        let offsetBarWidth = Math.abs(offset) / 10;
-        if (offsetBarWidth < 1) {
-          offsetBarWidth = 1;
-        } else if (offsetBarWidth > 65) {
-          offsetBarWidth = 65;
-        }
-
-        return (
-          <tr key={utm_sourcemedium} onMouseEnter={this.showAbsoluteOffset}>
-            <td>
-              <span>{utm_sourcemedium}</span>
-            </td>
-            <td>{value}</td>
-            <td>
-              <div
-                className={`offset_bar__wrapper${
-                  offset > 0 ? ' -pos' : ' -neg'
-                }`}
-              >
-                <div className="offset_num">{`${
-                  offset > 0 ? '+ ' : '- '
-                }${Math.abs(offset)}`}</div>
-                <div
-                  className="offset_bar"
-                  style={{width: `${offsetBarWidth}px`}}
-                />
-              </div>
-            </td>
-          </tr>
-        );
-      });
+      .map(createEl);
   }
 
   render() {
@@ -74,8 +100,8 @@ class Table extends PureComponent {
     if (objects.length === 0) {
       return (
         <React.Fragment>
-          <h1 css={titleStyles}>По источникам</h1>
-          <span css={loadingStyles}>...Загрузка</span>
+          <h1 className="section_title">По источникам</h1>
+          <span className="loading">...Загрузка</span>
         </React.Fragment>
       );
     }
@@ -92,9 +118,9 @@ class Table extends PureComponent {
 
     return (
       <React.Fragment>
-        <h1 css={titleStyles}>По источникам</h1>
+        <h1 className="section_title">По источникам</h1>
         <table css={tableStyles}>
-          <tbody>
+          <tbody onClick={this.onSelect}>
             <tr>
               <td>Все источники и в среднем</td>
               <td>{total}</td>
@@ -117,7 +143,8 @@ Table.propTypes = {
     objects: PropTypes.array.isRequired,
     divider: PropTypes.number.isRequired
   }),
-  getObjects: PropTypes.func.isRequired
+  getObjects: PropTypes.func.isRequired,
+  onSelectSource: PropTypes.func.isRequired
 };
 
 export default Table;
